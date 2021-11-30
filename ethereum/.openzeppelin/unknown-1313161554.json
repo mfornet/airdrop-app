@@ -1,0 +1,112 @@
+{
+  "manifestVersion": "3.2",
+  "proxies": [
+    {
+      "address": "0x03c41fB1F5470A852a8cDC76Ea1D78F9CD5e0c6D",
+      "txHash": "0xefb85cadbe8636da7e09a4f18ee734f096ad563638168f1a75284d4a253232f2",
+      "kind": "uups"
+    }
+  ],
+  "impls": {
+    "0ae181c2fd1f54ecdafc028bd89cabce8e3c066c68734b7ef9f0c6b2801b336c": {
+      "address": "0xC5dd06F98Dc4cE6d7Ddc3eA7d71115Fedda8911E",
+      "txHash": "0x0592cfd9accc1438ef6a281eca31c81026d9260ad2ca74ad328d0c497027f5cc",
+      "layout": {
+        "storage": [
+          {
+            "contract": "Initializable",
+            "label": "_initialized",
+            "type": "t_bool",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:37"
+          },
+          {
+            "contract": "Initializable",
+            "label": "_initializing",
+            "type": "t_bool",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:42"
+          },
+          {
+            "contract": "ERC1967UpgradeUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)50_storage",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/ERC1967/ERC1967UpgradeUpgradeable.sol:215"
+          },
+          {
+            "contract": "UUPSUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)50_storage",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol:81"
+          },
+          {
+            "contract": "ContextUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)50_storage",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:31"
+          },
+          {
+            "contract": "OwnableUpgradeable",
+            "label": "_owner",
+            "type": "t_address",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:22"
+          },
+          {
+            "contract": "OwnableUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)49_storage",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:82"
+          },
+          {
+            "contract": "Airdrop",
+            "label": "links",
+            "type": "t_mapping(t_address,t_struct(DropDetails)1140_storage)",
+            "src": "contracts/Airdrop.sol:22"
+          }
+        ],
+        "types": {
+          "t_mapping(t_address,t_struct(DropDetails)1140_storage)": {
+            "label": "mapping(address => struct Airdrop.DropDetails)"
+          },
+          "t_address": {
+            "label": "address"
+          },
+          "t_struct(DropDetails)1140_storage": {
+            "label": "struct Airdrop.DropDetails",
+            "members": [
+              {
+                "label": "exist",
+                "type": "t_bool"
+              },
+              {
+                "label": "claimed",
+                "type": "t_address"
+              },
+              {
+                "label": "token",
+                "type": "t_contract(IERC20Upgradeable)768"
+              },
+              {
+                "label": "amount",
+                "type": "t_uint256"
+              }
+            ]
+          },
+          "t_bool": {
+            "label": "bool"
+          },
+          "t_contract(IERC20Upgradeable)768": {
+            "label": "contract IERC20Upgradeable"
+          },
+          "t_uint256": {
+            "label": "uint256"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]"
+          }
+        }
+      }
+    }
+  }
+}
