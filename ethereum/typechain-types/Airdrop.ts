@@ -35,11 +35,12 @@ export type DropDetailsStructOutput = [boolean, string, string, BigNumber] & {
 export interface AirdropInterface extends utils.Interface {
   functions: {
     "claim(uint8,bytes32,bytes32)": FunctionFragment;
+    "claimWithAddress(address,uint8,bytes32,bytes32)": FunctionFragment;
     "createDrops(address[],uint256[],address)": FunctionFragment;
     "initialize()": FunctionFragment;
     "linkStatus(address)": FunctionFragment;
     "owner()": FunctionFragment;
-    "recoverAddress(uint8,bytes32,bytes32)": FunctionFragment;
+    "recoverAddress(address,uint8,bytes32,bytes32)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
     "upgradeTo(address)": FunctionFragment;
@@ -49,6 +50,10 @@ export interface AirdropInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "claim",
     values: [BigNumberish, BytesLike, BytesLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "claimWithAddress",
+    values: [string, BigNumberish, BytesLike, BytesLike]
   ): string;
   encodeFunctionData(
     functionFragment: "createDrops",
@@ -62,7 +67,7 @@ export interface AirdropInterface extends utils.Interface {
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "recoverAddress",
-    values: [BigNumberish, BytesLike, BytesLike]
+    values: [string, BigNumberish, BytesLike, BytesLike]
   ): string;
   encodeFunctionData(
     functionFragment: "renounceOwnership",
@@ -79,6 +84,10 @@ export interface AirdropInterface extends utils.Interface {
   ): string;
 
   decodeFunctionResult(functionFragment: "claim", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "claimWithAddress",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "createDrops",
     data: BytesLike
@@ -174,6 +183,14 @@ export interface Airdrop extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    claimWithAddress(
+      target: string,
+      v: BigNumberish,
+      r: BytesLike,
+      s: BytesLike,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     createDrops(
       publicKeys: string[],
       amounts: BigNumberish[],
@@ -193,6 +210,7 @@ export interface Airdrop extends BaseContract {
     owner(overrides?: CallOverrides): Promise<[string]>;
 
     recoverAddress(
+      target: string,
       v: BigNumberish,
       r: BytesLike,
       s: BytesLike,
@@ -227,6 +245,14 @@ export interface Airdrop extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  claimWithAddress(
+    target: string,
+    v: BigNumberish,
+    r: BytesLike,
+    s: BytesLike,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   createDrops(
     publicKeys: string[],
     amounts: BigNumberish[],
@@ -246,6 +272,7 @@ export interface Airdrop extends BaseContract {
   owner(overrides?: CallOverrides): Promise<string>;
 
   recoverAddress(
+    target: string,
     v: BigNumberish,
     r: BytesLike,
     s: BytesLike,
@@ -280,6 +307,14 @@ export interface Airdrop extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    claimWithAddress(
+      target: string,
+      v: BigNumberish,
+      r: BytesLike,
+      s: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     createDrops(
       publicKeys: string[],
       amounts: BigNumberish[],
@@ -297,6 +332,7 @@ export interface Airdrop extends BaseContract {
     owner(overrides?: CallOverrides): Promise<string>;
 
     recoverAddress(
+      target: string,
       v: BigNumberish,
       r: BytesLike,
       s: BytesLike,
@@ -358,6 +394,14 @@ export interface Airdrop extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    claimWithAddress(
+      target: string,
+      v: BigNumberish,
+      r: BytesLike,
+      s: BytesLike,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     createDrops(
       publicKeys: string[],
       amounts: BigNumberish[],
@@ -374,6 +418,7 @@ export interface Airdrop extends BaseContract {
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
     recoverAddress(
+      target: string,
       v: BigNumberish,
       r: BytesLike,
       s: BytesLike,
@@ -409,6 +454,14 @@ export interface Airdrop extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
+    claimWithAddress(
+      target: string,
+      v: BigNumberish,
+      r: BytesLike,
+      s: BytesLike,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
     createDrops(
       publicKeys: string[],
       amounts: BigNumberish[],
@@ -428,6 +481,7 @@ export interface Airdrop extends BaseContract {
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     recoverAddress(
+      target: string,
       v: BigNumberish,
       r: BytesLike,
       s: BytesLike,

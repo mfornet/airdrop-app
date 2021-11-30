@@ -57,6 +57,10 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.Airdrop__factory>;
     getContractFactory(
+      name: "TrustedAirdrop",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.TrustedAirdrop__factory>;
+    getContractFactory(
       name: "TST",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.TST__factory>;
@@ -116,6 +120,11 @@ declare module "hardhat/types/runtime" {
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.Airdrop>;
+    getContractAt(
+      name: "TrustedAirdrop",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.TrustedAirdrop>;
     getContractAt(
       name: "TST",
       address: string,

@@ -1,7 +1,7 @@
 import { keccak256 } from "@ethersproject/keccak256";
 import { expect } from "chai";
 import { ethers, upgrades } from "hardhat";
-import { Airdrop, TST } from "../typechain-types";
+import { Airdrop } from "../typechain-types";
 
 describe("Airdrop", () => {
   it("Should be able to produce valid signature", async () => {
@@ -47,7 +47,7 @@ describe("Airdrop", () => {
 
     const result = await airdrop
       .connect(alice)
-      .recoverAddress(sig.v, sig.r, sig.s);
+      .recoverAddress(alice.address, sig.v, sig.r, sig.s);
 
     expect(wallet.address).to.be.equal(result);
   });

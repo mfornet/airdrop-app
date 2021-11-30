@@ -6,6 +6,7 @@ import "hardhat-gas-reporter";
 import { HardhatUserConfig, task } from "hardhat/config";
 import "solidity-coverage";
 import "hardhat-deploy";
+import { ADDRESS } from "./index";
 import { Airdrop, TST } from "./typechain-types";
 
 dotenv.config();
@@ -13,19 +14,8 @@ dotenv.config();
 const PRIVATE_KEY = process.env.PRIVATE_KEY;
 const AURORA_TOKEN = process.env.AURORA_TOKEN || "";
 const INFURA_TOKEN = process.env.INFURA_TOKEN || "";
-const AIRDROP_ADDRESS = "0x03c41fB1F5470A852a8cDC76Ea1D78F9CD5e0c6D";
 
-// This is a sample Hardhat task. To learn how to create your own go to
-// https://hardhat.org/guides/create-task.html
-task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
-  const accounts = await hre.ethers.getSigners();
-
-  for (const account of accounts) {
-    console.log(account.address);
-  }
-});
-
-task("deploy", "Deploy airdrop contract", async (args, hre) => {
+task("deploy", "Deploy airdrop contract", async (_args, hre) => {
   const factory = await hre.ethers.getContractFactory("Airdrop");
 
   console.log("Deploying contract");
@@ -36,7 +26,7 @@ task("deploy", "Deploy airdrop contract", async (args, hre) => {
   console.log("Deployed to:", contract.address);
 });
 
-task("deploy-tst", "Deploy TST Token", async (args, hre) => {
+task("deploy-tst", "Deploy TST Token", async (_args, hre) => {
   const factory = await hre.ethers.getContractFactory("TST");
   console.log("Deploying contract");
   const token = await factory.deploy();
@@ -114,7 +104,6 @@ task("claim-airdrop", "Claim airdrop link")
 // You need to export an object to set up your config
 // Go to https://hardhat.org/config/ to learn more
 const config: HardhatUserConfig = {
-  //   defaultNetwork: "aurora",
   solidity: {
     version: "0.8.7",
     settings: {
@@ -127,12 +116,14 @@ const config: HardhatUserConfig = {
   namedAccounts: {
     tst: {
       default: 1,
+      auroraTunnel: "0xBdD6e7add8a2Df5565eF853b7f5fdA4b0f79e574",
+      aurora: "0xBdD6e7add8a2Df5565eF853b7f5fdA4b0f79e574",
       local: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
     },
     airdrop: {
       default: 2,
-      auroraTunnel: "0x03c41fB1F5470A852a8cDC76Ea1D78F9CD5e0c6D",
-      aurora: "0x03c41fB1F5470A852a8cDC76Ea1D78F9CD5e0c6D",
+      auroraTunnel: ADDRESS,
+      aurora: ADDRESS,
       local: "0x8A791620dd6260079BF849Dc5567aDC3F2FdC318",
     },
   },

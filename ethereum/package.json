@@ -1,7 +1,9 @@
 {
-  "name": "backend",
+  "name": "airdrop-backend",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
   "license": "MIT",
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.2",
@@ -35,6 +37,8 @@
     "solidity-coverage": "^0.7.17"
   },
   "scripts": {
-    "compile": "hardhat compile"
+    "compile": "hardhat compile",
+    "build": "tsc",
+    "develop": "tsc -w -p ."
   }
 }

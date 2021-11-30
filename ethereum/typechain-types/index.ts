@@ -12,6 +12,7 @@ export type { IERC20Metadata } from "./IERC20Metadata";
 export type { IERC20 } from "./IERC20";
 export type { ERC20PresetFixedSupply } from "./ERC20PresetFixedSupply";
 export type { Airdrop } from "./Airdrop";
+export type { TrustedAirdrop } from "./TrustedAirdrop";
 export type { TST } from "./TST";
 
 export { OwnableUpgradeable__factory } from "./factories/OwnableUpgradeable__factory";
@@ -25,4 +26,5 @@ export { IERC20Metadata__factory } from "./factories/IERC20Metadata__factory";
 export { IERC20__factory } from "./factories/IERC20__factory";
 export { ERC20PresetFixedSupply__factory } from "./factories/ERC20PresetFixedSupply__factory";
 export { Airdrop__factory } from "./factories/Airdrop__factory";
+export { TrustedAirdrop__factory } from "./factories/TrustedAirdrop__factory";
 export { TST__factory } from "./factories/TST__factory";

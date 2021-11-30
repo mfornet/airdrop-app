@@ -56,13 +56,14 @@ contract Airdrop is Initializable, UUPSUpgradeable, OwnableUpgradeable {
     }
 
     function recoverAddress(
+        address target,
         uint8 v,
         bytes32 r,
         bytes32 s
-    ) public view returns (address) {
+    ) public pure returns (address) {
         bytes memory message = abi.encodePacked(
             "\x19Ethereum Signed Message:\n20",
-            _msgSender()
+            target
         );
 
         bytes32 check = keccak256(message);
@@ -72,20 +73,29 @@ contract Airdrop is Initializable, UUPSUpgradeable, OwnableUpgradeable {
     /// To claim you should provide the signature of the message:
     /// msg = "\x19Ethereum Signed Message:\n20" + _msgSender()
     /// This must be signed using the secret key used to creat the airdrop to be claimed.
-    function claim(
+    function claimWithAddress(
+        address target,
         uint8 v,
         bytes32 r,
         bytes32 s
     ) public {
-        address pk = recoverAddress(v, r, s);
+        address pk = recoverAddress(target, v, r, s);
         DropDetails memory details = links[pk];
 
         require(details.exist, "Airdrop doesn't exist");
         require(details.claimed == address(0), "Airdrop was already claimed");
 
-        details.claimed = _msgSender();
+        details.claimed = target;
         links[pk] = details;
 
-        details.token.transfer(_msgSender(), details.amount);
+        details.token.transfer(target, details.amount);
+    }
+
+    function claim(
+        uint8 v,
+        bytes32 r,
+        bytes32 s
+    ) public {
+        claimWithAddress(_msgSender(), v, r, s);
     }
 }
