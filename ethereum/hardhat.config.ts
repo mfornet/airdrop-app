@@ -47,7 +47,9 @@ task("quick-test", "Check ERC20 Token metadata", async (_args, hre) => {
 task("create-airdrop-link", "Create an airdrop link")
   .addParam("token", "Address of the token")
   .addParam("amount", "Number of tokens")
+  .addParam("total", "Total drops to create")
   .setAction(async (args, hre) => {
+    const totalDrops = parseInt(args.total);
     const currentAddress = (await hre.ethers.getSigners())[0].address;
     console.log("Using address:", currentAddress);
 
@@ -65,35 +67,45 @@ task("create-airdrop-link", "Create an airdrop link")
     const decimals = await token.decimals();
     const xAmount = amount.mul(hre.ethers.BigNumber.from(10).pow(decimals));
 
-    console.log(`Creating drop for ${amount} ${symbol} (${name})`);
+    console.log(
+      `Creating ${totalDrops} drops for ${amount} ${symbol} (${name})`
+    );
 
     const currentBalance = await token.balanceOf(currentAddress);
+    const requiredBalance = xAmount.mul(totalDrops);
     console.log(
       "Current balance (without decimals)",
       currentBalance.toString()
     );
 
-    if (currentBalance < xAmount) {
+    console.log(
+      "Required balance (without decimals)",
+      requiredBalance.toString()
+    );
+
+    if (currentBalance < requiredBalance) {
       console.log("Not enough balance");
       return;
     }
 
     console.log("Setting allowance to create airdrops");
-    await token.approve(contract.address, xAmount);
+    await token.approve(contract.address, requiredBalance);
 
     const publicKeys = [];
     const secretKeys = [];
     const amounts = [];
 
-    const wallet = hre.ethers.Wallet.createRandom();
-    publicKeys.push(wallet.address);
-    secretKeys.push(wallet.privateKey);
-    amounts.push(xAmount);
+    for (let i = 0; i < totalDrops; i++) {
+      const wallet = hre.ethers.Wallet.createRandom();
+      publicKeys.push(wallet.address);
+      secretKeys.push(wallet.privateKey);
+      amounts.push(xAmount);
+    }
 
     console.log("Creating link drops");
     const tx = await contract.createDrops(publicKeys, amounts, token.address);
     const receipt = await tx.wait(3);
-    console.log(receipt);
+    console.log(receipt.status);
 
     console.log("Links:");
     secretKeys.forEach((sk) => console.log(sk));
@@ -199,7 +211,7 @@ const config: HardhatUserConfig = {
       blockGasLimit: 3_000_000_000,
     },
     auroraTunnel: {
-      url: `http://127.0.0.1:5432/`,
+      url: `http://127.0.0.1:8765/`,
       accounts: [`0x${PRIVATE_KEY}`],
       chainId: 1313161554,
     },

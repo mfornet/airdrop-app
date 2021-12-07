@@ -16,6 +16,7 @@ export class Drop {
     from: string
     drop_key?: string
     amount?: string
+    tokenAddress?: string
     tokenName?: string
     tokenSymbol?: string
     tokenDecimals?: number
@@ -33,6 +34,7 @@ export class Drop {
         from: string
         drop_key?: string
         amount?: string
+        tokenAddress?: string
         tokenName?: string
         tokenSymbol?: string
         tokenDecimals?: number
@@ -45,6 +47,7 @@ export class Drop {
         drop.from = args.from
         drop.drop_key = args.drop_key
         drop.amount = args.amount
+        drop.tokenAddress = args.tokenAddress
         drop.tokenName = args.tokenName
         drop.tokenSymbol = args.tokenSymbol
         drop.tokenDecimals = args.tokenDecimals
@@ -76,6 +79,10 @@ export class Drop {
             status.claimed !== '0x0000000000000000000000000000000000000000'
 
         const token = erc20(status.token, provider)
+
+        if (this.tokenAddress === undefined) {
+            this.tokenAddress = token.address
+        }
 
         if (this.tokenName === undefined) {
             this.tokenName = await token.name()

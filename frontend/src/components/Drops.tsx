@@ -138,6 +138,63 @@ function Drops(props: { mm: Boolean }) {
                                             ? drop.tokenName
                                             : 'Fetching...'}
                                     </div>
+                                    <div className="drop-item-pubkey text-ellipsis text-gray">
+                                        Address:{' '}
+                                        {drop.tokenAddress ? (
+                                            <>
+                                                {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+                                                <a
+                                                    href="#"
+                                                    onClick={async () => {
+                                                        await clipboard.writeText(
+                                                            drop.tokenAddress ||
+                                                                ''
+                                                        )
+                                                        alert(
+                                                            'Address copied to clipboard'
+                                                        )
+                                                    }}
+                                                >
+                                                    {drop.tokenAddress.slice(
+                                                        0,
+                                                        8
+                                                    ) + '...'}
+                                                </a>
+                                                {' ('}
+                                                {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+                                                <a
+                                                    href="#"
+                                                    onClick={async () => {
+                                                        await window.ethereum.request(
+                                                            {
+                                                                method: 'wallet_watchAsset',
+                                                                params: {
+                                                                    type: 'ERC20',
+                                                                    options: {
+                                                                        address:
+                                                                            drop.tokenAddress ||
+                                                                            '',
+                                                                        symbol:
+                                                                            drop.tokenSymbol ||
+                                                                            '',
+                                                                        decimals:
+                                                                            drop.tokenDecimals ||
+                                                                            0,
+                                                                        image: '',
+                                                                    },
+                                                                },
+                                                            }
+                                                        )
+                                                    }}
+                                                >
+                                                    Track in MetaMask
+                                                </a>
+                                                {')'}
+                                            </>
+                                        ) : (
+                                            'Fetching...'
+                                        )}
+                                    </div>
 
                                     <button
                                         className="btn btn-sm btn-primary"
