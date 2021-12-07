@@ -19,11 +19,16 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ADDRESS = void 0;
+exports.erc20 = exports.ADDRESS = void 0;
 const ethers_1 = require("ethers");
 const AirdropCompiled = __importStar(require("./artifacts/contracts/Airdrop.sol/Airdrop.json"));
+const TSTCompiled = __importStar(require("./artifacts/contracts/TST.sol/TST.json"));
 exports.ADDRESS = "0x1CF5b0289F097Aff132F368FAc63aE5AfC6F17E8";
 const contract = (provider) => {
     return new ethers_1.ethers.Contract(exports.ADDRESS, AirdropCompiled.abi, provider);
 };
+const erc20 = (address, provider) => {
+    return new ethers_1.ethers.Contract(address, TSTCompiled.abi, provider);
+};
+exports.erc20 = erc20;
 exports.default = { contract };

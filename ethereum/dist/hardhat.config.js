@@ -46,6 +46,14 @@ const INFURA_TOKEN = process.env.INFURA_TOKEN || "";
     const token = await factory.deploy();
     console.log("Deployed to:", token.address);
 });
+(0, config_1.task)("quick-test", "Check ERC20 Token metadata", async (_args, hre) => {
+    const user_address = "0x32d4c5c556b5f7d5ad6855ed0e3d8f7ace6b1dc1";
+    const token_address = "0x4988a896b1227218e4a686fde5eabdcabd91571f";
+    const factory = await hre.ethers.getContractFactory("TST");
+    const token = factory.attach(token_address);
+    const balance = await token.balanceOf(user_address);
+    console.log("Balance:", balance.toNumber());
+});
 (0, config_1.task)("create-airdrop-link-tst", "Create an airdrop link").setAction(async (_args, hre) => {
     const totalAirdrops = 3;
     const amount = 10;
