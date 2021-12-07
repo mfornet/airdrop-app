@@ -3,7 +3,22 @@ import ReactDOM from 'react-dom'
 import './index.css'
 import App from './App'
 import reportWebVitals from './reportWebVitals'
-import 'bootstrap/dist/css/bootstrap.min.css'
+
+class Config {
+    AURORA_CHAIN_ID = '0x4e454152'
+    AURORA_EXPLORER = 'https://explorer.mainnet.aurora.dev'
+    AURORA_ENDPOINT = 'http://mainnet.aurora.dev'
+    AIRDROP_BACKEND = 'https://airdrop-backend.herokuapp.com/api'
+}
+
+declare global {
+    interface Window {
+        ethereum: any
+        airdropConfig: Config
+    }
+}
+
+window.airdropConfig = new Config()
 
 ReactDOM.render(
     <React.StrictMode>
