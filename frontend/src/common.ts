@@ -91,22 +91,28 @@ export class Drop {
     }
 
     getAmount() {
-        if (this.tokenDecimals === undefined || this.tokenDecimals === 0) {
+        if (this.amount === undefined) {
+            return '0'
+        } else if (
+            this.tokenDecimals === undefined ||
+            this.tokenDecimals === 0
+        ) {
             return this.amount
         } else {
-            const decimals = this.tokenDecimals
-            const amountRepr = '0'.repeat(decimals + 1) + this.amount
-            const intPart = amountRepr.slice(
-                decimals +
-                    1 -
-                    Math.min(decimals + 1, amountRepr.length - decimals - 1),
-                amountRepr.length - decimals
-            )
-            const decPart = amountRepr.slice(
-                amountRepr.length - decimals,
-                Math.max(amountRepr.length - decimals + 2, decimals + 2)
-            )
-            return `${intPart}.${decPart}`
+            if (this.amount.length <= this.tokenDecimals) {
+                const decRepr =
+                    '0'.repeat(this.tokenDecimals - this.amount.length) +
+                    this.amount.slice(0, 2)
+                return `0.${decRepr}`
+            } else {
+                return `${this.amount.slice(
+                    0,
+                    this.amount.length - this.tokenDecimals
+                )}.${this.amount.slice(
+                    this.amount.length - this.tokenDecimals,
+                    this.amount.length - this.tokenDecimals + 2
+                )}`
+            }
         }
     }
 }

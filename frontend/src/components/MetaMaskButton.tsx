@@ -1,5 +1,5 @@
 import { useMetaMask } from 'metamask-react'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import LoginButton from './LoginButton'
 import metamaskIcon from '../assets/img/metamask.svg'
 
@@ -49,11 +49,6 @@ async function signInMetamask(status: string, connect: any, chainId: string) {
             }
         }
     }
-
-    // TODO: This
-    // provider = new ethers.providers.Web3Provider(window.ethereum)
-    // signer = provider.getSigner()
-    // address = account
 }
 
 async function signOutMetaMask() {}

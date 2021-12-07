@@ -44,7 +44,62 @@ task("quick-test", "Check ERC20 Token metadata", async (_args, hre) => {
   console.log("Balance:", balance.toNumber());
 });
 
-task("create-airdrop-link-tst", "Create an airdrop link").setAction(
+task("create-airdrop-link", "Create an airdrop link")
+  .addParam("token", "Address of the token")
+  .addParam("amount", "Number of tokens")
+  .setAction(async (args, hre) => {
+    const currentAddress = (await hre.ethers.getSigners())[0].address;
+    console.log("Using address:", currentAddress);
+
+    const amount = hre.ethers.BigNumber.from(args.amount);
+
+    const { airdrop } = await hre.getNamedAccounts();
+    const airdropFactory = await hre.ethers.getContractFactory("Airdrop");
+    const contract = airdropFactory.attach(airdrop) as Airdrop;
+
+    const tokenFactory = await hre.ethers.getContractFactory("TST");
+    const token = tokenFactory.attach(args.token) as TST;
+
+    const name = await token.name();
+    const symbol = await token.symbol();
+    const decimals = await token.decimals();
+    const xAmount = amount.mul(hre.ethers.BigNumber.from(10).pow(decimals));
+
+    console.log(`Creating drop for ${amount} ${symbol} (${name})`);
+
+    const currentBalance = await token.balanceOf(currentAddress);
+    console.log(
+      "Current balance (without decimals)",
+      currentBalance.toString()
+    );
+
+    if (currentBalance < xAmount) {
+      console.log("Not enough balance");
+      return;
+    }
+
+    console.log("Setting allowance to create airdrops");
+    await token.approve(contract.address, xAmount);
+
+    const publicKeys = [];
+    const secretKeys = [];
+    const amounts = [];
+
+    const wallet = hre.ethers.Wallet.createRandom();
+    publicKeys.push(wallet.address);
+    secretKeys.push(wallet.privateKey);
+    amounts.push(xAmount);
+
+    console.log("Creating link drops");
+    const tx = await contract.createDrops(publicKeys, amounts, token.address);
+    const receipt = await tx.wait(3);
+    console.log(receipt);
+
+    console.log("Links:");
+    secretKeys.forEach((sk) => console.log(sk));
+  });
+
+task("create-airdrop-link-tst", "Create an airdrop link for TST").setAction(
   async (_args, hre) => {
     const totalAirdrops = 3;
     const amount = 10;

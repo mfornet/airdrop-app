@@ -1,4 +1,3 @@
-import { ethers } from 'ethers'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import nearcover from '../assets/img/redpacket-cover.svg'
