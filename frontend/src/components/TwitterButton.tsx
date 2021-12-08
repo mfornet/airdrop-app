@@ -98,7 +98,9 @@ function TwitterButton() {
             user={user}
             iconSource={twitterIcon}
             signinFlow={connectToTwitter}
-            signoutFlow={() => console.log('signout')}
+            signoutFlow={() =>
+                localStorage.removeItem(TWITTER_SESSION_DATA_LOCAL_STORAGE_KEY)
+            }
         />
     )
 }

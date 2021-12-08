@@ -2,8 +2,10 @@ import * as clipboard from 'clipboard-polyfill/text'
 import { useEffect, useState } from 'react'
 import { backend, TwitterSession } from './TwitterButton'
 import ClaimButton from './ClaimButton'
-import { Drop, getLSDrops, setLSDrops } from '../common'
-
+import { Drop, fromDecimal, getLSDrops, setLSDrops, toDecimal } from '../common'
+import { ethers } from 'ethers'
+import { ADDRESS, erc20 } from 'airdrop-backend'
+import Airdrop from 'airdrop-backend'
 async function downloadTwitterDrops() {
     const twitterSession = TwitterSession.get()
 
@@ -31,6 +33,79 @@ async function downloadTwitterDrops() {
     }
 
     setLSDrops(drops)
+}
+
+async function createNewDrop(setDrops: any) {
+    let address = window.prompt(
+        'Enter the address of the token to be sent. Check the list of addresses at https://github.com/aurora-is-near/bridge-assets/blob/master/assets/aurora.tokenlist.json'
+    )
+
+    try {
+        address = ethers.utils.getAddress(address || '')
+    } catch (e) {
+        alert(`Invalid address <${address}>`)
+        return
+    }
+
+    const provider = new ethers.providers.Web3Provider(window.ethereum)
+    const signer = provider.getSigner()
+    const token = erc20(address, signer)
+
+    const tokenName = await token.name()
+    const tokenSymbol = await token.symbol()
+    const tokenDecimals = await token.decimals()
+    const currentBalance = await token.balanceOf(await signer.getAddress())
+
+    const allowance = await token.allowance(address, ADDRESS)
+
+    let amountRaw = window.prompt(
+        `
+Enter amount for drop
+
+Token ${tokenName}
+Balance = ${toDecimal(
+            currentBalance.toString(),
+            tokenDecimals
+        )} $${tokenSymbol}.
+Allowance= ${toDecimal(allowance.toString(), tokenDecimals)} $${tokenSymbol}
+
+Two transactions are required to create the drop:
+1. Set the allowance for the Airdrop Contract
+2. Create the drop
+`
+    )
+
+    const amount = ethers.BigNumber.from(
+        fromDecimal(amountRaw || '0', tokenDecimals)
+    )
+
+    if (amount > allowance) {
+        const tx = await token.increaseAllowance(ADDRESS, amount)
+        const receipt = await tx.wait(2)
+        console.log(receipt)
+    }
+
+    const wallet = ethers.Wallet.createRandom()
+
+    const drop = new Drop(wallet.privateKey, 'author')
+    drop.update()
+
+    const drops = getLSDrops()
+    drops.push(drop)
+    setLSDrops(drops)
+
+    console.log('Creating link drops')
+    const airdrop = Airdrop.contract(signer)
+    const tx = await airdrop.createDrops(
+        [wallet.address],
+        [amount],
+        token.address
+    )
+    const receipt = await tx.wait(2)
+    console.log(receipt)
+
+    alert('Airdrop successfully created')
+    setDrops(drops)
 }
 
 function Drops(props: { mm: Boolean }) {
@@ -77,20 +152,16 @@ function Drops(props: { mm: Boolean }) {
     } else {
         return (
             <div>
-                {/* <div className="near-balance">
-                    <div className="near-balance-title">Balance</div>
-                    <div className="near-balance-funds">
-                        2.3 <small>Ⓝ</small>
-                    </div>
+                <div className="near-balance">
                     <div className="near-balance-actions">
                         <button
                             className="btn btn-primary"
-                            onClick={() => console.log('Create new drop')}
+                            onClick={async () => await createNewDrop(setDrops)}
                         >
-                            + Create New NEAR Drop
+                            + Create New Drop
                         </button>
                     </div>
-                </div> */}
+                </div>
                 <div className="near-tabs">
                     <ul className="tab">
                         <li

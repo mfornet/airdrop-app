@@ -106,20 +106,7 @@ export class Drop {
         ) {
             return this.amount
         } else {
-            if (this.amount.length <= this.tokenDecimals) {
-                const decRepr =
-                    '0'.repeat(this.tokenDecimals - this.amount.length) +
-                    this.amount.slice(0, 2)
-                return `0.${decRepr}`
-            } else {
-                return `${this.amount.slice(
-                    0,
-                    this.amount.length - this.tokenDecimals
-                )}.${this.amount.slice(
-                    this.amount.length - this.tokenDecimals,
-                    this.amount.length - this.tokenDecimals + 2
-                )}`
-            }
+            return toDecimal(this.amount, this.tokenDecimals)
         }
     }
 }
@@ -132,4 +119,26 @@ export function getLSDrops(): Drop[] {
 
 export function setLSDrops(drops: Drop[]) {
     localStorage.setItem(DROPS_LOCAL_STORAGE_KEY, JSON.stringify(drops))
+}
+
+export function toDecimal(amount: string, decimals: number) {
+    if (amount.length <= decimals) {
+        const decRepr =
+            '0'.repeat(decimals - amount.length) + amount.slice(0, 2)
+        return `0.${decRepr}`
+    } else {
+        return `${amount.slice(0, amount.length - decimals)}.${amount.slice(
+            amount.length - decimals,
+            amount.length - decimals + 2
+        )}`
+    }
+}
+
+export function fromDecimal(amount: string, decimals: number) {
+    if (amount.indexOf('.') === -1) {
+        return amount + '0'.repeat(decimals)
+    } else {
+        const [head, tail] = amount.split('.')
+        return head + tail + '0'.repeat(decimals - tail.length)
+    }
 }
